@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Озвучка текста</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <style>
+        body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 600px) {
+            textarea {
+                height: 200px;
+            }
+
+            select, button {
+                width: 100%;
+                box-sizing: border-box;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://cdn.jsdelivr.net;">
+</head>
+
+<body>
+    <h6>Озвучка введенного текста</h6>
+    <textarea id="text-input" rows="10" placeholder="Введите текст здесь...">Привет, как дела?</textarea><br>
+
+    <label for="language-select">Выберите язык:</label>
+    <select id="language-select">
+        <option value="ru-RU">Русский</option>
+        <option value="uz-UZ">Узбекский</option>
+        <option value="en-US">Английский</option>
+        <option value="de-DE">Немецкий</option>
+        <option value="fr-FR">Французский</option>
+        <option value="es-ES">Испанский</option>
+        <option value="zh-CN">Китайский</option>
+        <option value="ja-JP">Японский</option>
+        <!-- Добавьте больше языков по мере необходимости -->
+    </select><br>
+
+    <button id="speak-button">Озвучить</button>
+
+    <script>
+        // Функция для очистки текста от потенциально опасных символов
+        const sanitizeText = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        const speak = function () {
+            var text = document.getElementById('text-input').value;
+            var sanitizedText = sanitizeText(text); // Очистка текста
+            var utterance = new SpeechSynthesisUtterance(sanitizedText);
+            var lang = document.getElementById('language-select').value;
+
+            utterance.lang = lang;
+
+            // Воспроизведение текста
+            window.speechSynthesis.speak(utterance);
+        }
+        document.getElementById('speak-button').addEventListener('click', speak);
+    </script>
+</body>
+
+</html>
